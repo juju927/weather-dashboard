@@ -18,7 +18,6 @@ function App() {
 	const fetchWeather = async (query) => {
 		setCardData({});
 		const resp = await getCurrentWeather(query);
-		console.log(resp);
 		if (resp.status == 200) {
 			setCardData(resp.data);
 		}

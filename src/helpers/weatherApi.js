@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const config = {
-    baseUrl: "http://api.weatherapi.com/v1",
+    baseUrl: "https://api.weatherapi.com/v1",
     key: import.meta.env.VITE_WEATHER_API_KEY,
 }
 

@@ -21,7 +21,7 @@ const WeatherCard = ({ data }) => {
 	};
 
 	return (
-		<div className="w-108 p-4 h-fit m-2 bg-violet-300/70 border border-violet-200 rounded-md text-black">
+		<div className="md:w-108 p-4 h-fit m-2 bg-violet-300/70 border border-violet-200 rounded-md text-black">
 			<section>
 				<div className="flex">
 					<div className="grow">

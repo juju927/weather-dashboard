@@ -87,6 +87,10 @@ function App() {
 			{!loading && existsCardData() && (<WeatherCard data={cardData} />)}
 
 			{!loading && !existsCardData() && (<p><i>Something went wrong - sorry :(</i></p>)}
+
+			<div className="absolute inset-x-0 bottom-0 h-2/5">
+				<div className={`absolute inset-0 bg-gradient-to-t ${getTempConfig(cardData?.current?.feelslike_c)?.color} to-black/0 transition-colors ease-in-out`}></div>
+			</div>
 		</div>
 	);
 }

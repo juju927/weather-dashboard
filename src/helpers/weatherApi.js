@@ -2,7 +2,7 @@ import axios from "axios";
 
 const config = {
     baseUrl: "http://api.weatherapi.com/v1",
-    key: "59232b78b0ec465bb6c42626251308",
+    key: import.meta.env.VITE_WEATHER_API_KEY,
 }
 
 export const getCurrentWeather = async (query) => {

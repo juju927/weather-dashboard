@@ -2,4 +2,4 @@
 
 🌦️ minimal weather app using [WeatherAPI](https://www.weatherapi.com/)
 
-[ [visit site](https://weather-dashboard-zfsy.onrender.com) ]
+[ [visit site →](https://weather-dashboard-zfsy.onrender.com) ]

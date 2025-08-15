@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+@theme {
+    --animate-fall: fall linear infinite;
+
+    @keyframes fall {
+        to { transform: translateY(100vh); }
+    }
+}

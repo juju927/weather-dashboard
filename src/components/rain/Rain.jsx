@@ -5,12 +5,23 @@ import { useEffect, useState } from "react";
 const randomRange = (min, max) =>
 	Math.floor(Math.random() * (max - min + 1)) + min;
 
+const numDrops = (precip) => {
+    if (precip == null) return 0;
+    if (precip <= 0) return 0;
+    if (precip < 1) return 10;
+    if (precip < 10) return 20;
+    if (precip < 30) return 50;
+    if (precip < 70) return 100;
+    if (precip < 150) return 150;
+    return 200;
+};
+
 const Rain = ({ precipitation }) => {
 	const [raindrops, setRaindrops] = useState([]);
 
 	useEffect(() => {
 		const drops = [];
-		for (let i = 0; i < precipitation; i++) {
+		for (let i = 0; i < numDrops(precipitation) ; i++) {
 			drops.push({
 				id: i,
 				left: randomRange(0, window.innerWidth),
@@ -18,7 +29,7 @@ const Rain = ({ precipitation }) => {
 			});
 		}
 		setRaindrops(drops);
-	}, []);
+	}, [precipitation]);
 
 	return (
 		<div className="fixed inset-0 pointer-events-none z-0">
@@ -27,7 +38,7 @@ const Rain = ({ precipitation }) => {
 					key={drop.id}
 					className="absolute w-[1px] bg-gradient-to-b from-[#0d343a] to-white/60 animate-fall"
 					style={{
-                        height: `${Math.floor(precipitation/10 * 78)}px`,
+                        height: `${Math.floor(numDrops(precipitation)/200 * 78)}px`,
 						left: drop.left,
 						top: drop.top,
 						animationDuration: `${0.6 + Math.random() * 0.5}s`,

@@ -19,6 +19,7 @@ function App() {
 		setCardData({});
 		const resp = await getCurrentWeather(query);
 		if (resp.status == 200) {
+			console.log(resp);
 			setCardData(resp.data);
 		}
 		setLoading(false);
@@ -42,7 +43,7 @@ function App() {
 
 	// get sg weather on mount
 	useEffect(() => {
-	    fetchWeather("Singapore");
+	    fetchWeather("auto:ip");
 	}, [])
 
 	return (

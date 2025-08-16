@@ -11,10 +11,16 @@ export interface WeatherData {
 
 	temp_c: number;
 	feelslike_temp_c: number;
+	temp_min_c?: number;
+	temp_max_c?: number;
 
 	wind_speed: number;
 	rain_mm: number;
 	clouds_percent: number;
+
+	visibility: number,
+	local_sunrise_time?: number,
+	local_sunset_time?: number,
 }
 
 export enum TimeOfDay {

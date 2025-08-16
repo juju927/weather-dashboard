@@ -64,10 +64,16 @@ const mapOpenWeatherMapApiResponseToWeatherData = (data: OpenWeatherMapCurrentRe
 
         temp_c: data?.main?.temp,
         feelslike_temp_c: data?.main?.feels_like,
+        temp_min_c: data?.main?.temp_min,
+        temp_max_c: data?.main?.temp_max,
         
         wind_speed: data?.wind?.speed,
         rain_mm: data?.rain?.["1h"] ?? 0,
         clouds_percent: data?.clouds.all,
+
+        visibility: data?.visibility,
+        local_sunrise_time: data?.sys?.sunrise,
+        local_sunset_time: data?.sys?.sunset,
     }
 }
 
@@ -89,6 +95,8 @@ const mapWeatherApiResponseToWeatherData = (data: WeatherAPICurrentResponse): We
         wind_speed: data?.current?.wind_mph,
         rain_mm: data?.current?.precip_mm,
         clouds_percent: data?.current?.cloud,
+
+        visibility: data?.current?.vis_km,
     }
 }
 
@@ -100,7 +108,7 @@ const getCountryName = (code: string): string => {
 }
 
 const getWeatherIcon = (code: string): string => {
-    return `http://openweathermap.org/img/wn/${code}.png`
+    return `http://openweathermap.org/img/wn/${code}@2x.png`
 }
 
 const getTzOffsetFromTzId = (tzId: string, date = new Date()): number => {

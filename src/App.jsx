@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { getCurrentWeather } from "./helpers/weatherApi";
+import { getCurrentWeather } from "./helpers/api/weatherApi";
 import WeatherCard from "./weather/WeatherCard";
 import { OrbitProgress } from "react-loading-indicators";
 import { getTempConfig } from "./helpers/fun";
 import Rain from "./components/rain/Rain";
+import { getWeatherData, WeatherApis } from "./helpers/api/common";
 
 function App() {
 	const [loading, setLoading] = useState(true);
@@ -40,6 +41,11 @@ function App() {
 		await fetchWeather(searchInput);
 		setSearchInput("");
 	};
+
+	const test = async (e) => {
+		const resp = await getWeatherData(WeatherApis.WEATHER_API, 1.290270, 103.851959);
+		console.log(resp);
+	}
 
 	// get sg weather on mount
 	useEffect(() => {
@@ -94,6 +100,8 @@ function App() {
 			<div className="absolute inset-x-0 bottom-0 h-2/5">
 				<div className={`absolute inset-0 bg-gradient-to-t ${getTempConfig(cardData?.current?.feelslike_c)?.color} to-black/0 transition-colors ease-in-out`}></div>
 			</div>
+
+			<button onClick={test}>hi</button>
 		</div>
 	);
 }

@@ -2,15 +2,16 @@ import axios from "axios";
 
 const config = {
     baseUrl: "https://api.weatherapi.com/v1",
-    key: import.meta.env.VITE_WEATHER_API_KEY,
+    Apikey: import.meta.env.VITE_WEATHER_API_KEY,
 }
 
 export const getCurrentWeather = async (query) => {
     try {
         const resp = await axios.get(`${config.baseUrl}/current.json`, {
             params: {
-                key: config.key,
+                key: config.Apikey,
                 q: query,
+                aqi: "no",
             }
         })
 

@@ -35,8 +35,6 @@ export enum WeatherConditions {
 	CLOUDS = "clouds",
 }
 
-
-
 export interface WeatherAPICurrentResponse {
 	location: {
 		name: string;

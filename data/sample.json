@@ -1,0 +1,18 @@
+{
+  "status": 200,
+  "data": {
+    "location_name": "Somapah Serangoon",
+    "location_country": "Singapore",
+    "tz_offset": 28800,
+    "lat": 1.3566,
+    "lon": 103.8811,
+    "timestamp_dt": 1755333461,
+    "weather_main": "Clouds",
+    "weather_icon": "http://openweathermap.org/img/wn/04d.png",
+    "temp_c": 30.53,
+    "feelslike_temp_c": 35.83,
+    "wind_speed": 3.42,
+    "rain_mm": 0,
+    "clouds_percent": 98
+  }
+}

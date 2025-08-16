@@ -100,8 +100,7 @@ const getCountryName = (code: string): string => {
 }
 
 const getWeatherIcon = (code: string): string => {
-    // don't return 'night' icons
-    return `http://openweathermap.org/img/wn/${code.slice(0, 2)}d.png`
+    return `http://openweathermap.org/img/wn/${code}.png`
 }
 
 const getTzOffsetFromTzId = (tzId: string, date = new Date()): number => {

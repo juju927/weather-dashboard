@@ -111,7 +111,7 @@ function App() {
 				<OrbitProgress
 					dense
 					color="#f9e2af"
-					size="small"
+					size="medium"
 					text=""
 					textColor=""
 				/>

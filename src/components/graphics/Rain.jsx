@@ -7,13 +7,12 @@ const randomRange = (min, max) =>
 
 const numDrops = (precip) => {
     if (precip == null) return 0;
-    if (precip <= 0) return 0;
-    if (precip < 1) return 10;
-    if (precip < 10) return 20;
-    if (precip < 30) return 50;
-    if (precip < 70) return 100;
-    if (precip < 150) return 150;
-    return 200;
+    if (precip < 0.1) return 0;
+    if (precip < 0.5) return 10;
+    if (precip < 2.5) return 20;
+    if (precip < 10) return 50;
+    if (precip < 50) return 100;
+    return 150
 };
 
 const Rain = ({ precipitation }) => {
@@ -38,7 +37,7 @@ const Rain = ({ precipitation }) => {
 					key={drop.id}
 					className="absolute w-[1px] bg-gradient-to-b from-[#0d343a] to-white/60 animate-fall"
 					style={{
-                        height: `${Math.floor(numDrops(precipitation)/200 * 78)}px`,
+                        height: `${Math.max(20, Math.floor(numDrops(precipitation)/150 * 78))}px`,
 						left: drop.left,
 						top: drop.top,
 						animationDuration: `${0.6 + Math.random() * 0.5}s`,

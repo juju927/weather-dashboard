@@ -1,8 +1,8 @@
-import { WeatherAPICurrentResponse, WeatherData } from "../common/types";
+import { WeatherData } from "../common/types";
 import countryNamesJSON from "../../../data/countryCodesToNames.json";
 import { getCurrentWeatherUsingOpenWeatherMap } from "./openWeatherMapApi";
-import { getCurrentWeather } from "./weatherApi";
 import { OpenWeatherMapCurrentResponseData } from "./openWeatherMapApi";
+import { weatherApiClient, WeatherAPICurrentResponse } from "./weatherApi";
 
 
 export enum WeatherApis {
@@ -27,7 +27,7 @@ export const getWeatherData = async (api: WeatherApis, lat: number, lon: number)
                 }
             }
         } else if (api === WeatherApis.WEATHER_API) {
-            const resp = await getCurrentWeather(`${lat},${lon}`);
+            const resp = await weatherApiClient.getCurrentWeather(`${lat},${lon}`);
             if (resp.status === 200 && resp.data) {
                 const mapped: WeatherData = mapWeatherApiResponseToWeatherData(resp.data);
                 return {
@@ -50,6 +50,7 @@ export const getWeatherData = async (api: WeatherApis, lat: number, lon: number)
 
 // weather mappers
 const mapOpenWeatherMapApiResponseToWeatherData = (data: OpenWeatherMapCurrentResponseData): WeatherData => {
+    console.log('cinna', data);
     return {
         location_name: data?.name,
         location_country: getCountryName(data?.sys?.country),

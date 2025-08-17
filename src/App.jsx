@@ -1,58 +1,51 @@
 import { useEffect, useState } from "react";
-import { getCurrentWeather } from "./helpers/api/weatherApi";
 import WeatherCard from "./weather/WeatherCard";
 import { OrbitProgress } from "react-loading-indicators";
 import { getTempConfig } from "./helpers/fun";
-import Rain from "./components/rain/Rain";
 import { getWeatherData, WeatherApis } from "./helpers/api/common";
+import Rain from "./components/graphics/Rain";
+import Background from "./components/graphics/Background";
 
 import sample from "../data/sample.json";
-import Background from "./components/rain/Background";
 import { TimeOfDay } from "./helpers/common/types";
 import { getTimeOfDay } from "./helpers/common/parse";
+import { weatherApiClient } from "./helpers/api/weatherApi.ts";
+import CountrySearchModal from "./components/search/CountrySearchModal";
 
 function App() {
 	const [loading, setLoading] = useState(true);
 	const [cardData, setCardData] = useState({});
-	const [searchInvalid, setSearchInvalid] = useState(false);
-	const [searchInput, setSearchInput] = useState("");
+	const [modalOpen, setModalOpen] = useState(false);
 
 	const existsCardData = () => {
 		return Object.keys(cardData).length > 0;
 	};
 
-	const fetchWeather = async (api, lat, lon) => {
-		setCardData({});
-		const resp = await getWeatherData(api, lat, lon);
+	const fetchWeather = async (lat, lon) => {
+		const resp = await getWeatherData(
+			WeatherApis.OPEN_WEATHER_MAP_API,
+			lat,
+			lon
+		);
 		if (resp.status == 200) {
 			console.log(resp);
-			setCardData(resp.data);
+			setCardData({
+				...cardData,
+				...resp.data,
+			});
 		}
 		setLoading(false);
 	};
 
-	const handleKeyDown = async (e) => {
-		// if (e.key !== "Enter") {
-		// 	setSearchInvalid(false);
-		// 	return;
-		// }
-
-		// if (searchInput.length > 0 && searchInput.length < 3) {
-		// 	setSearchInvalid(true);
-		// 	return;
-		// }
-
-		setLoading(true);
-		await fetchWeather(WeatherApis.OPEN_WEATHER_MAP_API, 35.9078, 127.7669);
-		setSearchInput("");
+	const handleSelectCountry = async (lat, lon) => {
+		await fetchWeather(lat, lon);
 	};
 
+	// Get weather of current location on mount
 	useEffect(() => {
-		// Get weather of current location on mount
 		navigator.geolocation.getCurrentPosition(
 			(pos) => {
 				fetchWeather(
-					WeatherApis.OPEN_WEATHER_MAP_API,
 					pos.coords.latitude,
 					pos.coords.longitude
 				);
@@ -62,8 +55,8 @@ function App() {
 				if (error.code === error.PERMISSION_DENIED) {
 					console.error("User denied Geolocation access.");
 					fetchWeather(
-						WeatherApis.OPEN_WEATHER_MAP_API,
-						39.0119, 98.4842
+						1.250111,
+						103.830933
 					);
 				} else {
 					console.error("Geolocation error: ", error.message);
@@ -72,8 +65,22 @@ function App() {
 		);
 	}, []);
 
+	useEffect(() => {
+		const handleKeyDown = (e) => {
+			if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+				e.preventDefault();
+				setModalOpen((prev) => true);
+			};
+		}
+
+		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
+	}, [])
+
 	return (
-		<div className="relative w-screen h-screen flex flex-col items-center text-white overflow-auto bg-black">
+		<div
+			className="relative w-screen h-screen flex flex-col items-center text-white overflow-auto bg-black"
+		>
 			<h1 className="z-10 mt-10 mb-5 font-semibold text-3xl tracking-wider">
 				today{" "}
 				{existsCardData()
@@ -81,29 +88,14 @@ function App() {
 					: "weather how?"}
 			</h1>
 
-			<form
-				className="z-10 w-72 mb-10"
-				onSubmit={(e) => {
-					e.preventDefault();
-				}}
-			>
-				<input
-					className="w-full mt-10 px-3 py-1 bg-neutral-800 rounded-sm"
-					type="text"
-					id="search"
-					value={searchInput}
-					autoComplete="off"
-					placeholder="Enter a location"
-					onChange={(e) => setSearchInput(e.target.value)}
-					onKeyDown={handleKeyDown}
-				/>
-				{searchInvalid && (
-					<span className="ml-1 text-sm text-light text-red-400 text-red">
-						Location name too short.
-					</span>
-				)}
-			</form>
+			<CountrySearchModal
+				isOpen={modalOpen}
+				handleModalClose={() => setModalOpen(false)}
+				countries={["singapore", "malaysia", "china"]}
+				handleSelectCountry={handleSelectCountry}
+			/>
 
+			{/* data */}
 			{loading && (
 				<OrbitProgress
 					dense

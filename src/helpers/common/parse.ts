@@ -29,21 +29,3 @@ export const getLocaleTimeString = (dt: number, tz_offset: number, country: stri
         timeStyle: "short",
     }).format(localTime);
 }
-
-const getLocaleString = (country: string, localDate: Date): string => {
-    const locale = countryToLocale[country] ?? "en-GB";
-    return localDate.toLocaleDateString(locale, {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
-}
-
-const getLocalTimeFromOffset = (dt: number, tz_offset: number): Date => {
-    const utcTime = dt * 1000;
-    const localTime = utcTime + tz_offset * 1000;
-    return new Date(localTime);
-}

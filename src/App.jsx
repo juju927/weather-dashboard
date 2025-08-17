@@ -15,7 +15,7 @@ import CountrySearchModal from "./components/search/CountrySearchModal";
 function App() {
 	const [loading, setLoading] = useState(true);
 	const [cardData, setCardData] = useState({});
-	const [modalOpen, setModalOpen] = useState(false);
+	const [modalOpen, setModalOpen] = useState(true);
 
 	const existsCardData = () => {
 		return Object.keys(cardData).length > 0;

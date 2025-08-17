@@ -1,5 +1,5 @@
 import { useDebounce } from "@uidotdev/usehooks";
-import { OrbitProgress } from "react-loading-indicators";
+import { ThreeDot } from "react-loading-indicators";
 import { useState, useEffect } from "react";
 import { weatherApiClient } from "../../helpers/api/weatherApi.ts";
 
@@ -28,7 +28,7 @@ const CountrySearchModal = ({
 
 		if (e.key === "Escape") {
 			e.preventDefault();
-			if (!open) return;
+			if (!isOpen) return;
 			handleModalClose();
 		}
 
@@ -80,7 +80,14 @@ const CountrySearchModal = ({
 	}, [debouncedSearchTerm]);
 
 	return (
-		<div className="fixed inset-0 z-50 w-screen flex items-start justify-center bg-black/10 backdrop-blur-sm">
+		<div
+			className="fixed inset-0 z-50 w-screen flex items-start justify-center bg-black/10 backdrop-blur-sm"
+			role="dialog"
+			aria-modal="true"
+			onMouseDown={(e) => {
+				if (e.target === e.currentTarget) handleModalClose();
+			}}
+		>
 			<div className="mt-30 max-h-4/5 w-4/5 max-w-3xl flex flex-col rounded-2xl bg-[var(--color-mocha-base)] text-[var(--color-mocha-text)] shadow-2xl ring-1 ring-white/10 overflow-hidden">
 				{/* Top search row */}
 				<div className="relative shrink-0 flex border-b border-[var(--color-mocha-overlay0)]">
@@ -125,21 +132,20 @@ const CountrySearchModal = ({
 				{/* results */}
 				<div className="grow bg-[var(--color-mocha-crust)]">
 					{isSearching && (
-						<OrbitProgress
-							dense
-							color="#cc8ce8"
-							size="small"
-							text=""
-							textColor=""
-							className="self-center"
-						/>
+						<div className="px-4 py-5 mx-auto flex justify-center">
+							<ThreeDot
+								color="#89b4fa"
+								size="small"
+								text=""
+								textColor=""
+							/>
+						</div>
 					)}
 
 					{!isSearching &&
 						searchResults.length > 0 &&
 						searchResults.map((searchResultItem, idx) => (
 							<div
-								autoFocus
 								key={idx}
 								className={`px-4 py-3 text-[var(--color-mocha-text)] ${
 									idx === selectedIdx &&

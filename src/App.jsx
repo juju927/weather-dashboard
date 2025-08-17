@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import WeatherCard from "./weather/WeatherCard";
 import { OrbitProgress } from "react-loading-indicators";
 import { getTempConfig } from "./helpers/fun";
@@ -15,7 +15,7 @@ import CountrySearchModal from "./components/search/CountrySearchModal";
 function App() {
 	const [loading, setLoading] = useState(true);
 	const [cardData, setCardData] = useState({});
-	const [modalOpen, setModalOpen] = useState(true);
+	const [modalOpen, setModalOpen] = useState(false);
 
 	const existsCardData = () => {
 		return Object.keys(cardData).length > 0;
@@ -42,7 +42,7 @@ function App() {
 			// get the timeZone
 			const timeZoneResp = await fetchTimeZone(lat, lon);
 			const tz_id = timeZoneResp?.location?.tz_id;
-			
+
 			// get the weather
 			const weatherResp = await fetchWeather(lat, lon);
 			setCardData((current) => ({
@@ -51,7 +51,7 @@ function App() {
 			}));
 		} catch (e) {
 			console.error(e);
-			setCardData({})
+			setCardData({});
 		} finally {
 			setLoading(false);
 		}
@@ -61,19 +61,13 @@ function App() {
 	useEffect(() => {
 		navigator.geolocation.getCurrentPosition(
 			(pos) => {
-				handleSelectCountry(
-					pos.coords.latitude,
-					pos.coords.longitude
-				);
+				handleSelectCountry(pos.coords.latitude, pos.coords.longitude);
 			},
 			(error) => {
 				// If geolocation access not allowed, return singapore temperature on mount
 				if (error.code === error.PERMISSION_DENIED) {
 					console.error("User denied Geolocation access.");
-					handleSelectCountry(
-						1.250111,
-						103.830933
-					);
+					handleSelectCountry(1.250111, 103.830933);
 				} else {
 					console.error("Geolocation error: ", error.message);
 				}
@@ -81,33 +75,34 @@ function App() {
 		);
 	}, []);
 
+	// listen for button presses on mount
 	useEffect(() => {
 		const handleKeyDown = (e) => {
 			if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
 				e.preventDefault();
 				setModalOpen((prev) => true);
-			};
-		}
+			}
+		};
 
 		window.addEventListener("keydown", handleKeyDown);
 		return () => window.removeEventListener("keydown", handleKeyDown);
-	}, [])
+	}, []);
+
+	const derivedTimeOfDay = useMemo(() => {
+		if (!cardData) return null;
+		return getTimeOfDay(
+			cardData?.timestamp_dt,
+			cardData?.local_sunrise_time,
+			cardData?.local_sunset_time
+		);
+	}, [cardData]);
 
 	return (
-		<div
-			className="relative w-screen h-screen flex flex-col items-center text-white overflow-auto bg-black"
-		>
-			<h1 className="z-10 mt-10 mb-5 font-semibold text-3xl tracking-wider">
-				today{" "}
-				{existsCardData()
-					? getTempConfig(cardData?.feelslike_temp_c)?.description
-					: "weather how?"}
-			</h1>
+		<div className="relative w-screen h-screen flex flex-col items-center text-[var(--color-mocha-text)] overflow-auto bg-[var(--color-mocha-base)]">
 
 			<CountrySearchModal
 				isOpen={modalOpen}
 				handleModalClose={() => setModalOpen(false)}
-				countries={["singapore", "malaysia", "china"]}
 				handleSelectCountry={handleSelectCountry}
 			/>
 
@@ -115,7 +110,7 @@ function App() {
 			{loading && (
 				<OrbitProgress
 					dense
-					color="#cc8ce8"
+					color="#f9e2af"
 					size="small"
 					text=""
 					textColor=""
@@ -123,14 +118,8 @@ function App() {
 			)}
 			{!loading && existsCardData() && (
 				<>
-					<WeatherCard data={cardData} />
-					<Background
-						timeOfDay={getTimeOfDay(
-							cardData?.timestamp_dt,
-							cardData?.local_sunrise_time,
-							cardData?.local_sunset_time
-						)}
-					/>
+					<WeatherCard data={cardData} timeOfDay={derivedTimeOfDay} handleModalOpen={() => setModalOpen(true)} />
+					<Background timeOfDay={derivedTimeOfDay} />
 					<Rain precipitation={cardData?.rain_mm} />
 				</>
 			)}

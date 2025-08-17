@@ -1,43 +1,52 @@
 import { getLocaleTimeString } from "../helpers/common/parse";
+import { TimeOfDay } from "../helpers/common/types";
 import WeatherCardComponent from "./WeatherCardComponent";
+import { GoTriangleUp, GoTriangleDown } from "react-icons/go";
 
-const WeatherCard = ({ data }) => {
+const WeatherCard = ({ data, timeOfDay, handleModalOpen }) => {
 	return (
-		<div className="relative z-10 w-full sm:w-4/5 max-w-2xl p-6 m-4 h-fit rounded-none sm:rounded-xl backdrop-blur-md bg-white/10 shadow-xl shadow-inner shadow-white/10 flex flex-col items-center text-center space-y-6">
-			<div
-				className="absolute inset-0 rounded-xl pointer-events-none -z-10"
-				style={{
-					boxShadow: "0 0 80px 15px rgba(255, 255, 255, 0.12)",
-					filter: "blur(12px)",
-					opacity: 0.6,
-				}}
-			/>
+		<div
+			data-time={timeOfDay}
+			className="relative z-10 w-full sm:w-4/5 max-w-2xl p-6 m-4 h-fit rounded-none sm:rounded-xl backdrop-blur-md flex flex-col items-center text-center space-y-6"
+		>
 			{/* location name */}
-			<section>
-				<h1 className="text-center text-4xl sm:text-5xl font-semibold tracking-wide">
+			<section onClick={handleModalOpen} className="cursor-pointer">
+				<h1 className="text-center text-2xl font-semibold tracking-wide text-[var(--wc-country)]">
 					{data?.location_country}
 				</h1>
-				<div className="text-lg text-slate-300">
+				<div className="text-xs text-[var(--wc-name)]">
 					{data?.location_name}
 				</div>
 			</section>
 
 			{/* temp & weather */}
-			<section className="mt-5 w-fit space-y-1">
-				<div className="flex items-start mx-3">
-					<div className="relative text-6xl">
-						{data?.temp_c.toFixed(1)}
-						<div className="absolute -right-4 top-2 text-lg font-light">°C</div>
+			<section className="mt-5 w-fit">
+				<div className="flex justify-center items-center text-2xl tracking-wide text-[var(--wc-weather)]">
+					<img src={data?.weather_icon} />
+					<div>{data?.weather_main}</div>
+				</div>
+
+				<div className="flex justify-center mx-3 -mt-5">
+					<div className="relative text-8xl font-bold text-[var(--wc-temp)]">
+						{data?.temp_c.toFixed(0)}
+						<div className="absolute -right-5 top-4 font-medium text-lg text-[var(--wc-temp)]">
+							°C
+						</div>
 					</div>
 				</div>
 
-				<div className="text-slate-300 mt-1 text-xs font-light">
-					{data?.temp_max_c.toFixed(0)}°C /{" "}
-					{data?.temp_min_c.toFixed(0)}°C
-				</div>
-
-				<div className="text-xl font-semibold tracking-wide">
-					{data?.weather_main}
+				<div className="mt-1 flex gap-3 text-xs font-light text-[var(--wc-subtext)]">
+					<div>{`feels like ${data?.feelslike_temp_c?.toFixed(
+						0
+					)}°C`}</div>
+					<div className="flex items-center">
+						<GoTriangleUp className="w-3 h-3 text-[var(--wc-high-t)]" />
+						<span>{data?.temp_max_c.toFixed(0)}°C</span>
+					</div>
+					<div className="flex items-center">
+						<GoTriangleDown className="w-3 h-3 text-[var(--wc-low-t)]" />
+						<span>{data?.temp_min_c.toFixed(0)}°C</span>
+					</div>
 				</div>
 			</section>
 
@@ -64,8 +73,13 @@ const WeatherCard = ({ data }) => {
 
 			{/* last updated time */}
 			<section>
-				<div className="text-slate-400 text-xs font-mono mt-4">
-					Updated at {getLocaleTimeString(data?.timestamp_dt, data?.location_country, data?.tz_id)}
+				<div className="text-xs font-mono mt-4 text-[var(--wc-subtext)]">
+					Updated at{" "}
+					{getLocaleTimeString(
+						data?.timestamp_dt,
+						data?.location_country,
+						data?.tz_id
+					)}
 				</div>
 			</section>
 		</div>

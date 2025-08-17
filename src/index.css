@@ -66,3 +66,56 @@
 	--color-latte-mantle: #e6e9ef;
 	--color-latte-crust: #dce0e8;
 }
+
+[data-time="night"] {
+	--wc-text: var(--color-mocha-text);
+	--wc-subtext: var(--color-mocha-subtext0);
+	--wc-country: var(--color-mocha-rosewater);
+	--wc-name: var(--color-mocha-mauve);
+	--wc-temp: var(--color-mocha-lavender);
+	--wc-high-t: var(--color-mocha-blue);
+	--wc-low-t: var(--color-mocha-red);
+	--wc-weather: var(--color-mocha-sky);
+	--wcc-wind: var(--color-mocha-flamingo);
+	--wcc-rain: var(--color-mocha-blue);
+	--wcc-cloud: var(--color-mocha-sky);
+}
+
+[data-time="day"] {
+	--wc-text: var(--color-mocha-text);
+	--wc-subtext: var(--color-mocha-subtext0);
+	--wc-country: var(--color-mocha-rosewater);
+	--wc-name: var(--color-mocha-mauve);
+	--wc-temp: var(--color-mocha-lavender);
+	--wc-deg: var(--color-mocha-mauve);
+	--wc-weather: var(--color-mocha-sky);
+	--wcc-wind: var(--color-mocha-sapphire);
+	--wcc-rain: var(--color-mocha-blue);
+	--wcc-cloud: var(--color-mocha-sky);
+}
+
+[data-time="night"] {
+	--wc-text: var(--color-mocha-text);
+	--wc-subtext: var(--color-mocha-subtext0);
+	--wc-country: var(--color-mocha-rosewater);
+	--wc-name: var(--color-mocha-lavender);
+	--wc-temp: var(--color-mocha-lavender);
+	--wc-deg: var(--color-mocha-mauve);
+	--wc-weather: var(--color-mocha-sky);
+	--wcc-wind: var(--color-mocha-flamingo);
+	--wcc-rain: var(--color-mocha-blue);
+	--wcc-cloud: var(--color-mocha-sky);
+}
+
+[data-time="night"] {
+	--wc-text: var(--color-mocha-text);
+	--wc-subtext: var(--color-mocha-subtext0);
+	--wc-country: var(--color-mocha-rosewater);
+	--wc-name: var(--color-mocha-lavender);
+	--wc-temp: var(--color-mocha-lavender);
+	--wc-deg: var(--color-mocha-mauve);
+	--wc-weather: var(--color-mocha-sky);
+	--wcc-wind: var(--color-mocha-flamingo);
+	--wcc-rain: var(--color-mocha-blue);
+	--wcc-cloud: var(--color-mocha-sky);
+}

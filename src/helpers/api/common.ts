@@ -109,7 +109,7 @@ const getCountryName = (code: string): string => {
 }
 
 const getWeatherIcon = (code: string): string => {
-    return `http://openweathermap.org/img/wn/${code}@2x.png`
+    return `http://openweathermap.org/img/wn/${code}.png`
 }
 
 const getTzOffsetFromTzId = (tzId: string, date = new Date()): number => {

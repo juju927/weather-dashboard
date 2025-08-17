@@ -8,7 +8,7 @@ const Background = ({ timeOfDay = TimeOfDay.DAY }: BackgroundProps) => {
 	return (
 		<>
 			{timeOfDay === TimeOfDay.DAY && (
-				<div className="fixed inset-0 z-0 bg-gradient-to-b from-[#87CEFA] via-[#B0E0E6] to-[#E0FFFF]"></div>
+				<div className="fixed inset-0 z-0 bg-gradient-to-b from-[#353690] via-[#2261a9] via-[#1f7dc3] via-[#3ab2d6] to-[#7bcae5]"></div>
 			)}
 
 			{timeOfDay === TimeOfDay.NIGHT && (

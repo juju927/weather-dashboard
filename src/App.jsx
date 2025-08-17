@@ -98,7 +98,7 @@ function App() {
 	}, [cardData]);
 
 	return (
-		<div className="relative w-screen h-screen flex flex-col items-center text-[var(--color-mocha-text)] overflow-auto bg-[var(--color-mocha-base)]">
+		<div className="relative w-dvw h-dvh flex flex-col items-center text-[var(--color-mocha-text)] overflow-auto bg-[var(--color-mocha-base)]">
 
 			<CountrySearchModal
 				isOpen={modalOpen}

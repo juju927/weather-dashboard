@@ -20,12 +20,12 @@ export const getTimeOfDay = (dt: number, sunrise: number, sunset: number): TimeO
     }
 }
 
-export const getLocaleTimeString = (dt: number, tz_offset: number, country: string, lat:number, lon: number): string => {
-    const localTime = new Date((dt) * 1000);
+export const getLocaleTimeString = (dt: number, country: string, tz_id: string): string => {
+    const localTime = new Date(dt * 1000);
     const locale = countryToLocale[country] ?? "en-GB";
-    console.log(locale)
     return new Intl.DateTimeFormat(locale, {
         dateStyle: "medium",
         timeStyle: "short",
+        timeZone: tz_id,
     }).format(localTime);
 }

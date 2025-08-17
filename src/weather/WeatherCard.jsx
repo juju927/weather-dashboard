@@ -43,7 +43,7 @@ const WeatherCard = ({ data }) => {
 
 			{/* weather cards */}
 			<section>
-				<div className="flex justify-around">
+				<div className="flex justify-around gap-5">
 					<WeatherCardComponent
 						stat="wind"
 						value={data?.wind_speed}
@@ -65,7 +65,7 @@ const WeatherCard = ({ data }) => {
 			{/* last updated time */}
 			<section>
 				<div className="text-slate-400 text-xs font-mono mt-4">
-					Updated at {getLocaleTimeString(data?.timestamp_dt, data?.tz_offset, data?.location_country, data?.lat, data?.lon)}
+					Updated at {getLocaleTimeString(data?.timestamp_dt, data?.location_country, data?.tz_id)}
 				</div>
 			</section>
 		</div>

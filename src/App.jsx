@@ -27,25 +27,41 @@ function App() {
 			lat,
 			lon
 		);
-		if (resp.status == 200) {
-			console.log(resp);
-			setCardData({
-				...cardData,
-				...resp.data,
-			});
-		}
-		setLoading(false);
+		if (resp.status == 200) return resp.data;
+		throw new Error("Weather fetch failed.");
+	};
+
+	const fetchTimeZone = async (lat, lon) => {
+		const resp = await weatherApiClient.getTimeZone(lat, lon);
+		if (resp.status == 200) return resp.data;
+		throw new Error("Timezone fetch failed.");
 	};
 
 	const handleSelectCountry = async (lat, lon) => {
-		await fetchWeather(lat, lon);
+		try {
+			// get the timeZone
+			const timeZoneResp = await fetchTimeZone(lat, lon);
+			const tz_id = timeZoneResp?.location?.tz_id;
+			
+			// get the weather
+			const weatherResp = await fetchWeather(lat, lon);
+			setCardData((current) => ({
+				...weatherResp,
+				tz_id: tz_id,
+			}));
+		} catch (e) {
+			console.error(e);
+			setCardData({})
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	// Get weather of current location on mount
 	useEffect(() => {
 		navigator.geolocation.getCurrentPosition(
 			(pos) => {
-				fetchWeather(
+				handleSelectCountry(
 					pos.coords.latitude,
 					pos.coords.longitude
 				);
@@ -54,7 +70,7 @@ function App() {
 				// If geolocation access not allowed, return singapore temperature on mount
 				if (error.code === error.PERMISSION_DENIED) {
 					console.error("User denied Geolocation access.");
-					fetchWeather(
+					handleSelectCountry(
 						1.250111,
 						103.830933
 					);
@@ -84,7 +100,7 @@ function App() {
 			<h1 className="z-10 mt-10 mb-5 font-semibold text-3xl tracking-wider">
 				today{" "}
 				{existsCardData()
-					? getTempConfig(cardData?.feelslike_temp_c).description
+					? getTempConfig(cardData?.feelslike_temp_c)?.description
 					: "weather how?"}
 			</h1>
 

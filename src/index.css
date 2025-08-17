@@ -8,15 +8,7 @@
 		}
 	}
 
-	@utility animate-twinkle {
-		animation-name: twinkle;
-		animation-duration: var(--d, 2.4s);
-		animation-timing-function: ease-in-out;
-		animation-iteration-count: infinite;
-		animation-direction: alternate;
-		animation-delay: var(--delay, 0s);
-		will-change: transform, opacity, box-shadow;
-	}
+	--animate-twinkle: twinkle var(--d, 2.4s) ease-in-out infinite alternate var(--delay, 0s);
 	@keyframes twinkle {
 		0%,
 		100% {
@@ -28,15 +20,6 @@
 			opacity: 1;
 			transform: scale(1.25);
 			box-shadow: 0 0 calc(var(--g2, 6px) * 1.55)calc(var(--g1, 3px) * 1.55) rgba(255, 255, 255, 0.45);
-		}
-	}
-
-	
-
-	/* Optional: honor reduced motion */
-	@media (prefers-reduced-motion: reduce) {
-		.animate-twinkle {
-			animation: none !important;
 		}
 	}
 
@@ -149,4 +132,10 @@
 	--wcc-wind: var(--color-mocha-flamingo);
 	--wcc-rain: var(--color-mocha-blue);
 	--wcc-cloud: var(--color-mocha-sky);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.animate-twinkle {
+		animation: none !important;
+	}
 }

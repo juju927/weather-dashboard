@@ -1,4 +1,5 @@
 import { TimeOfDay } from "../../helpers/common/types";
+import StarrySky from "./StarrySky";
 
 type BackgroundProps = {
 	timeOfDay?: TimeOfDay;
@@ -12,7 +13,9 @@ const Background = ({ timeOfDay = TimeOfDay.DAY }: BackgroundProps) => {
 			)}
 
 			{timeOfDay === TimeOfDay.NIGHT && (
-				<div className="fixed inset-0 z-0 bg-gradient-to-b from-[#110a48] via-[#12094c] via-[#251667] via-[#311f75] to-[#4f3098]"></div>
+				<div className="fixed inset-0 z-0 bg-gradient-to-b from-[#110a48] via-[#12094c] via-[#251667] via-[#311f75] to-[#4f3098]">
+					<StarrySky count={80} />
+				</div>
 			)}
 
 			{timeOfDay === TimeOfDay.SUNRISE && (

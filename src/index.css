@@ -2,10 +2,41 @@
 
 @theme {
 	--animate-fall: fall linear infinite;
-
 	@keyframes fall {
 		to {
 			transform: translateY(100vh);
+		}
+	}
+
+	@utility animate-twinkle {
+		animation-name: twinkle;
+		animation-duration: var(--d, 2.4s);
+		animation-timing-function: ease-in-out;
+		animation-iteration-count: infinite;
+		animation-direction: alternate;
+		animation-delay: var(--delay, 0s);
+		will-change: transform, opacity, box-shadow;
+	}
+	@keyframes twinkle {
+		0%,
+		100% {
+			opacity: var(--o, 0.9);
+			transform: scale(1);
+			box-shadow: 0 0 var(--g2, 6px) var(--g1, 3px) rgba(255, 255, 255, 0.28);
+		}
+		50% {
+			opacity: 1;
+			transform: scale(1.25);
+			box-shadow: 0 0 calc(var(--g2, 6px) * 1.55)calc(var(--g1, 3px) * 1.55) rgba(255, 255, 255, 0.45);
+		}
+	}
+
+	
+
+	/* Optional: honor reduced motion */
+	@media (prefers-reduced-motion: reduce) {
+		.animate-twinkle {
+			animation: none !important;
 		}
 	}
 

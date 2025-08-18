@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { apiResponse } from "../common";
 
 class OpenWeatherMapApiClient {
 	private readonly BASE_URL = "https://api.openweathermap.org/data/2.5";
@@ -10,6 +11,7 @@ class OpenWeatherMapApiClient {
 				params: {
 					...params,
 					appid: this.API_KEY,
+					units: "metric",
 				}
 			};
 
@@ -28,8 +30,14 @@ class OpenWeatherMapApiClient {
 	}
 
 	// https://openweathermap.org/current
-	async getCurrentWeather(lat: number, lon: number): Promise<{status: number; data: OpenWeatherMapCurrentResponseData}> {
-		return this.get<OpenWeatherMapCurrentResponseData>("/weather", { lat: lat, lon: lon, units: "metric" });
+	async getCurrentWeather(lat: number, lon: number): Promise<apiResponse<OpenWeatherMapCurrentResponseData>> {
+		return this.get<OpenWeatherMapCurrentResponseData>("/weather", { lat: lat, lon: lon });
+	}
+
+	// https://openweathermap.org/forecast5 (5 day, 3 hour interval)
+	// cnt is # of timestamps returned
+	async getForecast(lat: number, lon: number): Promise<apiResponse<OpenWeatherMapForecastResponseData>> {
+		return this.get<OpenWeatherMapForecastResponseData>("/forecast", { lat: lat, lon: lon, cnt: 5 });
 	}
 }
 
@@ -90,7 +98,61 @@ export interface OpenWeatherMapCurrentResponseData {
 	cod: number;
 }
 
-export interface OpenWeatherMapCurrentResponse {
-	status: number,
-	data: OpenWeatherMapCurrentResponseData
-} 
+export interface OpenWeatherMapForecastResponseData {
+  cod: string; // note: comes as string in their API ("200")
+  message: number;
+  cnt: number;
+  list: Array<{
+    dt: number;
+    main: {
+      temp: number;
+      feels_like: number;
+      temp_min: number;
+      temp_max: number;
+      pressure: number;
+      sea_level: number;
+      grnd_level: number;
+      humidity: number;
+      temp_kf: number;
+    };
+    weather: Array<{
+      id: number;
+      main: string;
+      description: string;
+      icon: string;
+    }>;
+    clouds: {
+      all: number;
+    };
+    wind: {
+      speed: number;
+      deg: number;
+      gust?: number;
+    };
+    visibility: number;
+    pop: number; // probability of precipitation
+    rain?: {
+      "3h": number;
+    };
+    snow?: {
+      "3h": number;
+    };
+    sys: {
+      pod: "d" | "n"; // part of day
+    };
+    dt_txt: string; // forecast time as text
+  }>;
+  city: {
+    id: number;
+    name: string;
+    coord: {
+      lat: number;
+      lon: number;
+    };
+    country: string;
+    population: number;
+    timezone: number;
+    sunrise: number;
+    sunset: number;
+  };
+}

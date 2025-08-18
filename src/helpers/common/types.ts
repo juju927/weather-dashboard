@@ -23,6 +23,11 @@ export interface WeatherData {
 	local_sunset_time?: number,
 }
 
+export interface WeatherForecastData {
+	timestamp_dt: number;
+	weather_icon: string;
+}
+
 export enum TimeOfDay {
 	SUNRISE = "sunrise",
 	DAY = "day",
@@ -40,3 +45,4 @@ export enum WeatherConditions {
 	CLEAR = "clear",
 	CLOUDS = "clouds",
 }
+

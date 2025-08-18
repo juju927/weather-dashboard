@@ -1,8 +1,9 @@
-import { WeatherData } from "../common/types";
+import { WeatherData, WeatherForecastData } from "../common/types";
 import countryNamesJSON from "../../../data/countryCodesToNames.json";
-import { openWeatherMapApiClient } from "./openWeatherMapApi";
-import { OpenWeatherMapCurrentResponseData } from "./openWeatherMapApi";
+import { openWeatherMapApiClient } from "./openWeatherMap/openWeatherMapApi";
+
 import { weatherApiClient, WeatherAPICurrentResponse } from "./weatherApi";
+import { mapOpenWEatherMapApiResponseToForecastData, mapOpenWeatherMapApiResponseToWeatherData } from "./openWeatherMap/helpers";
 
 
 export enum WeatherApis {
@@ -10,12 +11,12 @@ export enum WeatherApis {
     OPEN_WEATHER_MAP_API
 }
 
-export interface WeatherResponse {
-    status: number,
-    data?: WeatherData,
+export interface apiResponse<T> {
+    status: number;
+    data?: T;
 }
 
-export const getWeatherData = async (api: WeatherApis, lat: number, lon: number): Promise<WeatherResponse> => {
+export const getWeatherData = async (api: WeatherApis, lat: number, lon: number): Promise<apiResponse<WeatherData>> => {
     try {
         if (api === WeatherApis.OPEN_WEATHER_MAP_API) {
             const resp = await openWeatherMapApiClient.getCurrentWeather(lat, lon);
@@ -48,36 +49,26 @@ export const getWeatherData = async (api: WeatherApis, lat: number, lon: number)
     }
 }
 
-// weather mappers
-const mapOpenWeatherMapApiResponseToWeatherData = (data: OpenWeatherMapCurrentResponseData): WeatherData => {
-    console.log('cinna', data);
-    return {
-        location_name: data?.name,
-        location_country: getCountryName(data?.sys?.country),
-        tz_offset: data?.timezone,
-        lat: data?.coord?.lat,
-        lon: data?.coord?.lon,
-
-        timestamp_dt: data?.dt,
-
-        weather_main: data?.weather[0]?.main,
-        weather_icon: getWeatherIcon(data?.weather[0].icon),
-
-        temp_c: data?.main?.temp,
-        feelslike_temp_c: data?.main?.feels_like,
-        temp_min_c: data?.main?.temp_min,
-        temp_max_c: data?.main?.temp_max,
-        
-        wind_speed: data?.wind?.speed,
-        rain_mm: data?.rain?.["1h"] ?? 0,
-        clouds_percent: data?.clouds.all,
-
-        visibility: data?.visibility,
-        local_sunrise_time: data?.sys?.sunrise,
-        local_sunset_time: data?.sys?.sunset,
+export const getForecastData = async (lat: number, lon: number): Promise<apiResponse<WeatherForecastData[]>> => {
+    try {
+        const resp = await openWeatherMapApiClient.getForecast(lat, lon);
+        if (resp.status === 200 && resp.data) {
+            const mapped: Array<WeatherForecastData> = mapOpenWEatherMapApiResponseToForecastData(resp.data);
+            return {
+                status: resp.status,
+                data: mapped,
+            }
+        }  
+        console.log("Somehow failed lol");
+        return { status: 418 }
+    } catch (err) {
+        console.error(err);
+        return { status: 500 }
     }
 }
 
+
+// weather mappers
 const mapWeatherApiResponseToWeatherData = (data: WeatherAPICurrentResponse): WeatherData => {
     return {
         location_name: data?.location?.name,
@@ -104,12 +95,8 @@ const mapWeatherApiResponseToWeatherData = (data: WeatherAPICurrentResponse): We
 // helpers
 const countryNames: Record<string, string> = countryNamesJSON;
 
-const getCountryName = (code: string): string => {
+export const getCountryName = (code: string): string => {
     return countryNames[code] ?? code;
-}
-
-const getWeatherIcon = (code: string): string => {
-    return `http://openweathermap.org/img/wn/${code}.png`
 }
 
 const getTzOffsetFromTzId = (tzId: string, date = new Date()): number => {

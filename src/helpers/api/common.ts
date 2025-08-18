@@ -1,6 +1,6 @@
 import { WeatherData } from "../common/types";
 import countryNamesJSON from "../../../data/countryCodesToNames.json";
-import { getCurrentWeatherUsingOpenWeatherMap } from "./openWeatherMapApi";
+import { openWeatherMapApiClient } from "./openWeatherMapApi";
 import { OpenWeatherMapCurrentResponseData } from "./openWeatherMapApi";
 import { weatherApiClient, WeatherAPICurrentResponse } from "./weatherApi";
 
@@ -18,7 +18,7 @@ export interface WeatherResponse {
 export const getWeatherData = async (api: WeatherApis, lat: number, lon: number): Promise<WeatherResponse> => {
     try {
         if (api === WeatherApis.OPEN_WEATHER_MAP_API) {
-            const resp = await getCurrentWeatherUsingOpenWeatherMap(lat, lon);
+            const resp = await openWeatherMapApiClient.getCurrentWeather(lat, lon);
             if (resp.status === 200 && resp.data) {
                 const mapped: WeatherData = mapOpenWeatherMapApiResponseToWeatherData(resp.data);
                 return {

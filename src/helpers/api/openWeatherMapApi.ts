@@ -1,42 +1,40 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
-const config = {
-	baseUrl: "https://api.openweathermap.org/data/2.5/weather",
-	apikey: import.meta.env.VITE_OPEN_WEATHER_MAP_API_KEY as string,
-};
+class OpenWeatherMapApiClient {
+	private readonly BASE_URL = "https://api.openweathermap.org/data/2.5";
+	private readonly API_KEY = import.meta.env.VITE_OPEN_WEATHER_MAP_API_KEY;
 
-// https://openweathermap.org/current
-export const getCurrentWeatherUsingOpenWeatherMap = async (lat: number, lon: number): Promise<OpenWeatherMapCurrentResponse> => {
-  try {
-    const resp = await axios.get(config.baseUrl, {
-      params: {
-        appid: config.apikey,
-        lat,
-        lon,
-        units: "metric",
-      },
-    });
+	private async get<T>(endpoint: string, params: Record<string, any>): Promise<{ status: number; data: T}> {
+		try {
+			const config: AxiosRequestConfig = {
+				params: {
+					...params,
+					appid: this.API_KEY,
+				}
+			};
 
-    return {
-      status: resp.status,
-      data: resp.data,
-    };
-  } catch (error: unknown) {
-    let status = 500;
-    let data;
+			const resp = await axios.get<T>(`${this.BASE_URL}${endpoint}`, config);
+			return {
+				status: resp.status,
+				data: resp.data
+			}
+		} catch (error: any) {
+			console.error(`GET ${endpoint} failed for OpenWeatherMap API Client\n`, error)
 
-    if (axios.isAxiosError(error)) {
-      status = error.response?.status ?? 500;
-      data = error.response?.data;
-    } else if (error instanceof Error) {
-      console.error("Non-Axios error:", error.message);
-    } else {
-      console.error("Unknown error:", error);
-    }
+			const status = error?.status ?? 500;
+			const message = error?.message ?? "Unknown error"
+			return { status, data: message }
+		}
+	}
 
-    return { status, data };
-  }
-};
+	// https://openweathermap.org/current
+	async getCurrentWeather(lat: number, lon: number): Promise<{status: number; data: OpenWeatherMapCurrentResponseData}> {
+		return this.get<OpenWeatherMapCurrentResponseData>("/weather", { lat: lat, lon: lon, units: "metric" });
+	}
+}
+
+export const openWeatherMapApiClient = new OpenWeatherMapApiClient();
+
 
 // types
 export interface OpenWeatherMapCurrentResponseData {

@@ -16,6 +16,7 @@ function App() {
 	const [loading, setLoading] = useState(true);
 	const [cardData, setCardData] = useState({});
 	const [modalOpen, setModalOpen] = useState(false);
+	const [coords, setCoords] = useState({ lat: null, lon: null });
 
 	const existsCardData = () => {
 		return Object.keys(cardData).length > 0;
@@ -23,7 +24,6 @@ function App() {
 
 	const fetchWeather = async (lat, lon) => {
 		const resp = await getWeatherData(
-			WeatherApis.OPEN_WEATHER_MAP_API,
 			lat,
 			lon
 		);
@@ -48,6 +48,10 @@ function App() {
 			setCardData((current) => ({
 				...weatherResp,
 				tz_id: tz_id,
+			}));
+			setCoords((current) => ({
+				lat: lat,
+				lon: lon,
 			}));
 		} catch (e) {
 			console.error(e);
@@ -88,6 +92,9 @@ function App() {
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, []);
 
+
+
+
 	// derived values for props
 	const derivedTimeOfDay = useMemo(() => {
 		if (!cardData) return null;
@@ -110,13 +117,15 @@ function App() {
 
 			{/* data */}
 			{loading && (
-				<OrbitProgress
-					dense
-					color="#f9e2af"
-					size="medium"
-					text=""
-					textColor=""
-				/>
+				<div className="mt-10">
+					<OrbitProgress
+						dense
+						color="#f9e2af"
+						size="medium"
+						text=""
+						textColor=""
+					/>
+				</div>
 			)}
 			{!loading && existsCardData() && (
 				<>

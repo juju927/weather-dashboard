@@ -16,7 +16,7 @@ export interface apiResponse<T> {
     data?: T;
 }
 
-export const getWeatherData = async (api: WeatherApis, lat: number, lon: number): Promise<apiResponse<WeatherData>> => {
+export const getWeatherData = async (lat: number, lon: number, api: WeatherApis=WeatherApis.OPEN_WEATHER_MAP_API): Promise<apiResponse<WeatherData>> => {
     try {
         if (api === WeatherApis.OPEN_WEATHER_MAP_API) {
             const resp = await openWeatherMapApiClient.getCurrentWeather(lat, lon);

@@ -31,7 +31,7 @@ const Rain = ({ precipitation }) => {
 	}, [precipitation]);
 
 	return (
-		<div className="fixed inset-0 pointer-events-none z-0">
+		<div className="fixed inset-0 pointer-events-none z-40">
 			{raindrops.map((drop) => (
 				<div
 					key={drop.id}

@@ -2,6 +2,7 @@ import { getLocaleTimeString } from "../helpers/common/parse";
 import { TimeOfDay } from "../helpers/common/types";
 import WeatherCardComponent from "./WeatherCardComponent";
 import { GoTriangleUp, GoTriangleDown } from "react-icons/go";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 const WeatherCard = ({ data, timeOfDay, handleModalOpen }) => {
 	return (
@@ -11,9 +12,13 @@ const WeatherCard = ({ data, timeOfDay, handleModalOpen }) => {
 		>
 			{/* location name */}
 			<section onClick={handleModalOpen} className="cursor-pointer">
-				<h1 className="text-center text-2xl font-semibold tracking-wide text-[var(--wc-country)]">
-					{data?.location_country}
-				</h1>
+				<div className="flex items-center gap-2">
+					<FaMagnifyingGlass />
+					<h1 className="text-center text-2xl font-semibold tracking-wide text-[var(--wc-country)]">
+						{data?.location_country}
+					</h1>
+				</div>
+
 				<div className="text-xs text-[var(--wc-name)]">
 					{data?.location_name}
 				</div>

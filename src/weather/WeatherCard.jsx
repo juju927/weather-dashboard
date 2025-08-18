@@ -8,7 +8,7 @@ const WeatherCard = ({ data, timeOfDay, handleModalOpen }) => {
 	return (
 		<div
 			data-time={timeOfDay}
-			className="relative z-10 w-full sm:w-4/5 max-w-2xl p-6 m-4 h-fit rounded-none sm:rounded-xl backdrop-blur-md flex flex-col items-center text-center space-y-6"
+			className="relative z-10 w-full sm:w-4/5 max-w-2xl pt-10 p-6 h-fit rounded-none sm:rounded-xl backdrop-blur-md flex flex-col items-center text-center space-y-6"
 		>
 			{/* location name */}
 			<section onClick={handleModalOpen} className="cursor-pointer">
@@ -57,7 +57,7 @@ const WeatherCard = ({ data, timeOfDay, handleModalOpen }) => {
 
 			{/* weather cards */}
 			<section>
-				<div className="flex justify-around gap-5">
+				<div className="flex justify-around gap-3 sm:gap-5">
 					<WeatherCardComponent
 						stat="wind"
 						value={data?.wind_speed}

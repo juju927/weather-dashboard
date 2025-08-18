@@ -57,22 +57,22 @@ function App() {
 		}
 	};
 
+	const handleSelectCurrentLocation = async () => {
+		navigator.geolocation.getCurrentPosition((pos) => {
+			handleSelectCountry(pos.coords.latitude, pos.coords.longitude);
+		}, 
+		(error) => {
+			if (error.code === error.PERMISSION_DENIED) {
+				console.error("User denied Geolocation access.");
+			} else {
+				console.error("Geolocation error: ", error.message);
+			}
+		})
+	}
+
 	// Get weather of current location on mount
 	useEffect(() => {
-		navigator.geolocation.getCurrentPosition(
-			(pos) => {
-				handleSelectCountry(pos.coords.latitude, pos.coords.longitude);
-			},
-			(error) => {
-				// If geolocation access not allowed, return singapore temperature on mount
-				if (error.code === error.PERMISSION_DENIED) {
-					console.error("User denied Geolocation access.");
-					handleSelectCountry(1.250111, 103.830933);
-				} else {
-					console.error("Geolocation error: ", error.message);
-				}
-			}
-		);
+		handleSelectCurrentLocation();
 	}, []);
 
 	// listen for button presses on mount
@@ -88,6 +88,7 @@ function App() {
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, []);
 
+	// derived values for props
 	const derivedTimeOfDay = useMemo(() => {
 		if (!cardData) return null;
 		return getTimeOfDay(
@@ -104,6 +105,7 @@ function App() {
 				isOpen={modalOpen}
 				handleModalClose={() => setModalOpen(false)}
 				handleSelectCountry={handleSelectCountry}
+				handleSelectCurrentLocation={handleSelectCurrentLocation}
 			/>
 
 			{/* data */}

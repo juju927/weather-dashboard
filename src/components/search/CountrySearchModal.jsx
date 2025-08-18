@@ -3,13 +3,13 @@ import { ThreeDot } from "react-loading-indicators";
 import { useState, useEffect, useRef } from "react";
 import { weatherApiClient } from "../../helpers/api/weatherApi.ts";
 import { FocusTrap } from "focus-trap-react";
+import { FaLocationDot } from "react-icons/fa6";
 
 const CountrySearchModal = ({
 	isOpen,
 	handleModalClose,
-	countries,
-	onSelect,
 	handleSelectCountry,
+	handleSelectCurrentLocation,
 }) => {
 	if (!isOpen) return null;
 
@@ -65,6 +65,10 @@ const CountrySearchModal = ({
 			searchResults[selectedIdx].lat,
 			searchResults[selectedIdx].lon
 		);
+		return resetModal();
+	};
+
+	const resetModal = () => {
 		setSearchInput("");
 		setSearchResults([]);
 		setSelectedIdx(0);
@@ -182,6 +186,22 @@ const CountrySearchModal = ({
 									{`, ${searchResultItem?.country}`}
 								</div>
 							))}
+
+						{!isSearching && searchResults.length == 0 && (
+							<div
+								className={`px-4 py-3 flex items-center gap-2 text-[var(--color-mocha-text)] bg-[var(--color-mocha-surface0)]`}
+								onClick={async (e) => {
+									e.preventDefault();
+									await handleSelectCurrentLocation();
+									resetModal();
+								}}
+							>
+								<FaLocationDot />
+								<span className="font-bold">
+									Use current location
+								</span>
+							</div>
+						)}
 					</div>
 					<div className="px-5 py-2 flex flex-col sm:flex-row gap-2 sm:gap-0 justify-between border-t border-[var(--color-mocha-overlay0)]">
 						<span className="italic text-xs text-[var(--color-mocha-subtext0)]">

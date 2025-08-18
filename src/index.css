@@ -109,7 +109,7 @@
 	--wcc-cloud: var(--color-mocha-sky);
 }
 
-[data-time="night"] {
+[data-time="sunset"] {
 	--wc-text: var(--color-mocha-text);
 	--wc-subtext: var(--color-mocha-subtext0);
 	--wc-country: var(--color-mocha-rosewater);
@@ -123,7 +123,7 @@
 	--wcc-cloud: var(--color-mocha-sky);
 }
 
-[data-time="night"] {
+[data-time="sunrise"] {
 	--wc-text: var(--color-mocha-text);
 	--wc-subtext: var(--color-mocha-subtext0);
 	--wc-country: var(--color-mocha-rosewater);

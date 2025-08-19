@@ -47,7 +47,7 @@ function App() {
 			// set data
 			setCardData((current) => ({
 				...weatherData,
-				tz_id: timeZoneResp.location?.tz_id,
+				tz_id: timeZoneResp.data?.location?.tz_id,
 			}));
 
 			scheduleNextFetch(lat, lon);
@@ -60,10 +60,7 @@ function App() {
 	}, []);
 
 	const updateForecastData = useCallback(async (lat, lon) => {
-		const respData = await getForecastData(
-			lat,
-			lon
-		);
+		const respData = await getForecastData(lat, lon);
 		setForecastData(respData);
 	}, []);
 

@@ -16,54 +16,42 @@ export interface apiResponse<T> {
     data?: T;
 }
 
-export const getWeatherData = async (lat: number, lon: number, api: WeatherApis=WeatherApis.OPEN_WEATHER_MAP_API): Promise<apiResponse<WeatherData>> => {
+export const getWeatherData = async (lat: number, lon: number, api: WeatherApis=WeatherApis.OPEN_WEATHER_MAP_API): Promise<WeatherData|null> => {
     try {
         if (api === WeatherApis.OPEN_WEATHER_MAP_API) {
             const resp = await openWeatherMapApiClient.getCurrentWeather(lat, lon);
             if (resp.status === 200 && resp.data) {
-                const mapped: WeatherData = mapOpenWeatherMapApiResponseToWeatherData(resp.data);
-                return {
-                    status: resp.status,
-                    data: mapped,
-                }
+                return mapOpenWeatherMapApiResponseToWeatherData(resp.data);
             }
         } else if (api === WeatherApis.WEATHER_API) {
             const resp = await weatherApiClient.getCurrentWeather(`${lat},${lon}`);
             if (resp.status === 200 && resp.data) {
-                const mapped: WeatherData = mapWeatherApiResponseToWeatherData(resp.data);
-                return {
-                    status: resp.status,
-                    data: mapped,
-                }
+                return mapWeatherApiResponseToWeatherData(resp.data);
             }
         } else {
             console.log("Incorrect weather api call provided");
-            return { status: 500 };
+            return null;
         }
 
-        return { status: 418 }
+        return null;
 
     } catch (err) {
         console.error(err);
-        return { status: 500 };
+        return null;
     }
 }
 
-export const getForecastData = async (lat: number, lon: number): Promise<apiResponse<WeatherForecastData[]>> => {
+export const getForecastData = async (lat: number, lon: number): Promise<WeatherForecastData[]|null> => {
     try {
         const resp = await openWeatherMapApiClient.getForecast(lat, lon);
         if (resp.status === 200 && resp.data) {
-            const mapped: Array<WeatherForecastData> = mapOpenWEatherMapApiResponseToForecastData(resp.data);
-            return {
-                status: resp.status,
-                data: mapped,
-            }
+            return mapOpenWEatherMapApiResponseToForecastData(resp.data);
         }  
         console.log("Somehow failed lol");
-        return { status: 418 }
+        return null;
     } catch (err) {
         console.error(err);
-        return { status: 500 }
+        return null;
     }
 }
 

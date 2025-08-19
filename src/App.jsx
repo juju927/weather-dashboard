@@ -11,59 +11,51 @@ import { TimeOfDay } from "./helpers/common/types";
 import { getTimeOfDay } from "./helpers/common/parse";
 import { weatherApiClient } from "./helpers/api/weatherApi.ts";
 import CountrySearchModal from "./components/search/CountrySearchModal";
+import { loadCoords, saveCoords } from "./helpers/common/storage";
 
 function App() {
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [cardData, setCardData] = useState({});
-	const [modalOpen, setModalOpen] = useState(false);
+	const [modalOpen, setModalOpen] = useState(() => !loadCoords());
 	const [coords, setCoords] = useState({ lat: null, lon: null });
 
 	const existsCardData = () => {
 		return Object.keys(cardData).length > 0;
 	};
 
-	const fetchWeather = async (lat, lon) => {
-		const resp = await getWeatherData(
-			lat,
-			lon
-		);
-		if (resp.status == 200) return resp.data;
-		throw new Error("Weather fetch failed.");
-	};
-
-	const fetchTimeZone = async (lat, lon) => {
-		const resp = await weatherApiClient.getTimeZone(lat, lon);
-		if (resp.status == 200) return resp.data;
-		throw new Error("Timezone fetch failed.");
-	};
-
-	const handleSelectCountry = async (lat, lon) => {
+	const updateCardData = async (lat, lon) => {
+		setLoading(true);
 		try {
-			// get the timeZone
-			const timeZoneResp = await fetchTimeZone(lat, lon);
-			const tz_id = timeZoneResp?.location?.tz_id;
-
-			// get the weather
-			const weatherResp = await fetchWeather(lat, lon);
+			const weatherData = await getWeatherData(
+				lat,
+				lon
+			);
+	
+			const timeZoneResp = await weatherApiClient.getTimeZone(lat, lon);
+			if (timeZoneResp.status !== 200) throw new Error("Timezone fetch failed.");
+	
 			setCardData((current) => ({
-				...weatherResp,
-				tz_id: tz_id,
-			}));
-			setCoords((current) => ({
-				lat: lat,
-				lon: lon,
-			}));
+				...weatherData,
+				tz_id: timeZoneResp.location?.tz_id,
+			}))
 		} catch (e) {
 			console.error(e);
 			setCardData({});
 		} finally {
 			setLoading(false);
 		}
+	}
+
+	const handleSelectCountry = async (lat, lon) => {
+		await updateCardData(lat, lon)
+		saveCoords(lat, lon);
 	};
 
 	const handleSelectCurrentLocation = async () => {
-		navigator.geolocation.getCurrentPosition((pos) => {
-			handleSelectCountry(pos.coords.latitude, pos.coords.longitude);
+		navigator.geolocation.getCurrentPosition(async (pos) => {
+			const { latitude, longitude } = pos.coords;
+			await updateCardData(latitude, longitude);
+			saveCoords(latitude, longitude);
 		}, 
 		(error) => {
 			if (error.code === error.PERMISSION_DENIED) {
@@ -72,11 +64,12 @@ function App() {
 				console.error("Geolocation error: ", error.message);
 			}
 		})
-	}
+	};
 
-	// Get weather of current location on mount
+	// get weather for last saved location on mount
 	useEffect(() => {
-		handleSelectCurrentLocation();
+		const savedCoords = loadCoords();
+		if (savedCoords) updateCardData(savedCoords.lat, savedCoords.lon);
 	}, []);
 
 	// listen for button presses on mount
@@ -87,13 +80,9 @@ function App() {
 				setModalOpen((prev) => true);
 			}
 		};
-
 		window.addEventListener("keydown", handleKeyDown);
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, []);
-
-
-
 
 	// derived values for props
 	const derivedTimeOfDay = useMemo(() => {
@@ -136,9 +125,7 @@ function App() {
 			)}
 
 			{!loading && !existsCardData() && (
-				<p>
-					<i>Something went wrong - sorry :(</i>
-				</p>
+				<Background timeOfDay={TimeOfDay.SUNSET} />
 			)}
 		</div>
 	);

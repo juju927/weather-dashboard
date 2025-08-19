@@ -69,7 +69,7 @@ function App() {
 
 	const handleSelectCountry = async (lat, lon) => {
 		await updateCardData(lat, lon);
-		await updateForecastData(latitude, longitude);
+		await updateForecastData(lat, lon);
 		saveCoords(lat, lon);
 	};
 

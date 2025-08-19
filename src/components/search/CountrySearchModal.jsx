@@ -53,7 +53,6 @@ const CountrySearchModal = ({
 		setIsSearching(true);
 		const resp = await weatherApiClient.searchForLocation(searchInput);
 		if (resp.status === 200) {
-			console.log(resp);
 			setSearchResults(resp.data);
 		}
 		setIsSearching(false);
@@ -61,11 +60,9 @@ const CountrySearchModal = ({
 
 	const handleSubmit = async () => {
 		if (selectedIdx > searchResults.length - 1) return;
-		await handleSelectCountry(
-			searchResults[selectedIdx].lat,
-			searchResults[selectedIdx].lon
-		);
-		return resetModal();
+		const { lat, lon } = searchResults[selectedIdx];
+  		resetModal();
+  		handleSelectCountry(lat, lon);
 	};
 
 	const resetModal = () => {
@@ -192,7 +189,7 @@ const CountrySearchModal = ({
 								className={`px-4 py-3 flex items-center gap-2 text-[var(--color-mocha-text)] bg-[var(--color-mocha-surface0)]`}
 								onClick={async (e) => {
 									e.preventDefault();
-									await handleSelectCurrentLocation();
+									handleSelectCurrentLocation();
 									resetModal();
 								}}
 							>

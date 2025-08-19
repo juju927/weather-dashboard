@@ -25,6 +25,7 @@ export interface WeatherData {
 
 export interface WeatherForecastData {
 	timestamp_dt: number;
+	weather_main: string;
 	weather_icon: string;
 }
 

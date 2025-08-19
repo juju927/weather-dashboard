@@ -32,7 +32,7 @@ export const mapOpenWeatherMapApiResponseToWeatherData = (data: OpenWeatherMapCu
 }
 
 export const mapOpenWEatherMapApiResponseToForecastData = (data: OpenWeatherMapForecastResponseData): Array<WeatherForecastData> => {
-    return data.list.map((record) => ({ timestamp_dt: record.dt, weather_icon: getWeatherIcon(record.weather[0].icon) }));
+    return data.list.map((record) => ({ timestamp_dt: record.dt, weather_main: record.weather[0].main,weather_icon: getWeatherIcon(record.weather[0].icon) }));
 }
 
 const getWeatherIcon = (code: string): string => {

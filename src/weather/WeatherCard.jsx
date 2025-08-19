@@ -3,8 +3,9 @@ import { TimeOfDay } from "../helpers/common/types";
 import WeatherCardComponent from "./WeatherCardComponent";
 import { GoTriangleUp, GoTriangleDown } from "react-icons/go";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import WeatherCardForecastComponent from "./WeatherCardForecastComponent";
 
-const WeatherCard = ({ data, timeOfDay, handleModalOpen }) => {
+const WeatherCard = ({ data, timeOfDay, handleModalOpen, forecastData }) => {
 	return (
 		<div
 			data-time={timeOfDay}
@@ -76,15 +77,28 @@ const WeatherCard = ({ data, timeOfDay, handleModalOpen }) => {
 				</div>
 			</section>
 
+			{/* forecast cards */}
+			<section>
+				<div className="flex justify-around gap-5">
+					{ forecastData.map((hourForecastData, idx) => (
+						<WeatherCardForecastComponent key={idx} forecastData={hourForecastData} data={data} />
+					))}
+				</div>
+			</section>
+
 			{/* last updated time */}
 			<section>
 				<div className="text-xs font-mono mt-4 text-[var(--wc-subtext)]">
-					Updated at{" "}
-					{getLocaleTimeString(
+					{`Updated at 
+					${getLocaleTimeString(
 						data?.timestamp_dt,
 						data?.location_country,
-						data?.tz_id
-					)}
+						data?.tz_id,
+						{
+							dateStyle: "medium",
+							timeStyle: "short"
+						}
+					)}`}
 				</div>
 			</section>
 		</div>

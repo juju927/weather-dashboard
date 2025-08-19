@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import WeatherCard from "./weather/WeatherCard";
 import { OrbitProgress } from "react-loading-indicators";
 import { getTempConfig } from "./helpers/fun";
-import { getWeatherData, WeatherApis } from "./helpers/api/common";
+import { getForecastData, getWeatherData, WeatherApis } from "./helpers/api/common";
 import Rain from "./components/graphics/Rain";
 import Background from "./components/graphics/Background";
 
@@ -17,7 +17,7 @@ function App() {
 	const [loading, setLoading] = useState(false);
 	const [cardData, setCardData] = useState({});
 	const [modalOpen, setModalOpen] = useState(() => !loadCoords());
-	const [coords, setCoords] = useState({ lat: null, lon: null });
+	const [forecastData, setForecastData] = useState([]);
 
 	const existsCardData = () => {
 		return Object.keys(cardData).length > 0;
@@ -44,10 +44,19 @@ function App() {
 		} finally {
 			setLoading(false);
 		}
-	}
+	};
+
+	const updateForecastData = async (lat, lon) => {
+		const savedCoords = loadCoords();
+		if (savedCoords) {
+			const respData = await getForecastData(savedCoords.lat, savedCoords.lon);
+			setForecastData(respData);
+		}
+	};
 
 	const handleSelectCountry = async (lat, lon) => {
 		await updateCardData(lat, lon)
+		await updateForecastData(latitude, longitude);
 		saveCoords(lat, lon);
 	};
 
@@ -55,6 +64,7 @@ function App() {
 		navigator.geolocation.getCurrentPosition(async (pos) => {
 			const { latitude, longitude } = pos.coords;
 			await updateCardData(latitude, longitude);
+			await updateForecastData(latitude, longitude);
 			saveCoords(latitude, longitude);
 		}, 
 		(error) => {
@@ -69,7 +79,10 @@ function App() {
 	// get weather for last saved location on mount
 	useEffect(() => {
 		const savedCoords = loadCoords();
-		if (savedCoords) updateCardData(savedCoords.lat, savedCoords.lon);
+		if (savedCoords) {
+			updateCardData(savedCoords.lat, savedCoords.lon);
+			updateForecastData(savedCoords.lat, savedCoords.lon);
+		}
 	}, []);
 
 	// listen for button presses on mount
@@ -118,7 +131,7 @@ function App() {
 			)}
 			{!loading && existsCardData() && (
 				<>
-					<WeatherCard data={cardData} timeOfDay={derivedTimeOfDay} handleModalOpen={() => setModalOpen(true)} />
+					<WeatherCard data={cardData} timeOfDay={derivedTimeOfDay} handleModalOpen={() => setModalOpen(true)} forecastData={forecastData} />
 					<Background timeOfDay={derivedTimeOfDay} />
 					<Rain precipitation={cardData?.rain_mm} />
 				</>

@@ -32,13 +32,13 @@ export const getTimeOfDay = (
 export const getLocaleTimeString = (
 	dt: number,
 	country: string,
-	tz_id: string
+	tz_id: string,
+	options?: Intl.DateTimeFormatOptions
 ): string => {
 	const localTime = new Date(dt * 1000);
 	const locale = countryToLocale[country] ?? "en-GB";
 	return new Intl.DateTimeFormat(locale, {
-		dateStyle: "medium",
-		timeStyle: "short",
+		...options,
 		timeZone: tz_id,
 	}).format(localTime);
 };

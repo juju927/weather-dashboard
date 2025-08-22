@@ -2,7 +2,7 @@ import { WeatherData, WeatherForecastData } from "../common/types";
 import countryNamesJSON from "../../../data/countryCodesToNames.json";
 import { openWeatherMapApiClient } from "./openWeatherMap/openWeatherMapApi";
 
-import { weatherApiClient, WeatherAPICurrentResponse } from "./weatherApi";
+import { weatherApiClient, WeatherAPICurrentResponse } from "./weatherApi/weatherApi";
 import { mapOpenWEatherMapApiResponseToForecastData, mapOpenWeatherMapApiResponseToWeatherData } from "./openWeatherMap/helpers";
 
 
@@ -41,12 +41,16 @@ export const getWeatherData = async (lat: number, lon: number, api: WeatherApis=
     }
 }
 
-export const getForecastData = async (lat: number, lon: number): Promise<WeatherForecastData[]|null> => {
+export const getForecastData = async (lat: number, lon: number, api: WeatherApis=WeatherApis.OPEN_WEATHER_MAP_API): Promise<WeatherForecastData[]|null> => {
     try {
-        const resp = await openWeatherMapApiClient.getForecast(lat, lon);
-        if (resp.status === 200 && resp.data) {
-            return mapOpenWEatherMapApiResponseToForecastData(resp.data);
-        }  
+        if (api === WeatherApis.OPEN_WEATHER_MAP_API) {
+            const resp = await openWeatherMapApiClient.getForecast(lat, lon);
+            if (resp.status === 200 && resp.data) {
+                return mapOpenWEatherMapApiResponseToForecastData(resp.data);
+            }  
+
+        }
+        console.log("baboo", resp)
         console.log("Somehow failed lol");
         return null;
     } catch (err) {

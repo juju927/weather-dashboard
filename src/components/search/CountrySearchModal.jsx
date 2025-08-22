@@ -1,7 +1,7 @@
 import { useDebounce } from "@uidotdev/usehooks";
 import { ThreeDot } from "react-loading-indicators";
 import { useState, useEffect, useRef } from "react";
-import { weatherApiClient } from "../../helpers/api/weatherApi.ts";
+import { weatherApiClient } from "../../helpers/api/weatherApi/weatherApi.js";
 import FocusTrap from "focus-trap-react";
 import { FaLocationDot } from "react-icons/fa6";
 

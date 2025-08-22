@@ -29,6 +29,38 @@ export interface WeatherForecastData {
 	weather_icon: string;
 }
 
+export interface WeatherForecastData {
+	location: {
+		lat: number;
+		lon: number;
+		tz_id: string;	
+	};
+	forecast: {
+		day: ForecastDay[]
+	}
+}
+
+interface ForecastDay {
+	date: string,
+	date_epoch: number;
+	maxtemp_c: number;
+	mintemp_c: number;
+	condition: Condition;
+	hour: ForecastHour[]
+}
+
+interface Condition {
+	text: string;
+	icon: string;
+}
+
+interface ForecastHour {
+	time_epoch: number;
+	time: string;
+	condition: Condition;
+}
+
+
 export enum TimeOfDay {
 	SUNRISE = "sunrise",
 	DAY = "day",

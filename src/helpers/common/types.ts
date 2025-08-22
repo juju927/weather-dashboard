@@ -23,14 +23,15 @@ export interface WeatherData {
 	local_sunset_time?: number,
 }
 
-// export interface WeatherForecastData {
-// 	timestamp_dt: number;
-// 	weather_main: string;
-// 	weather_icon: string;
-// }
+export interface WeatherForecastData_v1 {
+	timestamp_dt: number;
+	weather_main: string;
+	weather_icon: string;
+}
 
 export interface WeatherForecastData {
 	location: {
+		country: string;
 		lat: number;
 		lon: number;
 		tz_id: string;	
@@ -59,7 +60,6 @@ interface ForecastHour {
 	time: string;
 	condition: Condition;
 }
-
 
 export enum TimeOfDay {
 	SUNRISE = "sunrise",

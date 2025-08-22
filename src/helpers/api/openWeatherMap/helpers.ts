@@ -1,4 +1,4 @@
-import { WeatherData, WeatherForecastData } from "../../common/types";
+import { WeatherData, WeatherForecastData_v1 } from "../../common/types";
 import { getCountryName } from "../common"
 import { OpenWeatherMapCurrentResponseData, OpenWeatherMapForecastResponseData } from "./openWeatherMapApi";
 
@@ -31,7 +31,7 @@ export const mapOpenWeatherMapApiResponseToWeatherData = (data: OpenWeatherMapCu
     }
 }
 
-export const mapOpenWEatherMapApiResponseToForecastData = (data: OpenWeatherMapForecastResponseData): Array<WeatherForecastData> => {
+export const mapOpenWeatherMapApiResponseToForecastData = (data: OpenWeatherMapForecastResponseData): Array<WeatherForecastData_v1> => {
     return data.list.map((record) => ({ timestamp_dt: record.dt, weather_main: record.weather[0].main,weather_icon: getWeatherIcon(record.weather[0].icon) }));
 }
 

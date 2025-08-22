@@ -62,7 +62,7 @@ class WeatherApiClient {
 	): Promise<{ status: number; data: WeatherAPIForecastResponse }> {
 		return this.get<WeatherAPIForecastResponse>("/forecast.json", {
 			q: query,
-			days: 7,
+			days: 8,
 			aqi: "no",
 			alerts: "no",
 		});

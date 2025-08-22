@@ -28,6 +28,7 @@ export const mapWeatherApiResponseToWeatherData = (data: WeatherAPICurrentRespon
 export const mapWeatherApiResponseToForecastData = (data: WeatherAPIForecastResponse): WeatherForecastData => {
     return {
         location: {
+            country: data.location.country,
             lat: data.location.lat,
             lon: data.location.lon,
             tz_id: data.location.tz_id

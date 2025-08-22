@@ -11,7 +11,7 @@ import Rain from "./components/graphics/Rain";
 import Background from "./components/graphics/Background";
 import { TimeOfDay } from "./helpers/common/types";
 import { getTimeOfDay } from "./helpers/common/parse";
-import { weatherApiClient } from "./helpers/api/weatherApi.ts";
+import { weatherApiClient } from "./helpers/api/weatherApi/weatherApi";
 import CountrySearchModal from "./components/search/CountrySearchModal";
 import { loadCoords, saveCoords } from "./helpers/common/storage";
 

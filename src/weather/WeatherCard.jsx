@@ -3,13 +3,15 @@ import { TimeOfDay } from "../helpers/common/types";
 import WeatherCardComponent from "./WeatherCardComponent";
 import { GoTriangleUp, GoTriangleDown } from "react-icons/go";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import WeatherCardForecastComponent from "./WeatherCardForecastComponent";
+import WeatherCardForecastComponent from "./forecast/WeatherCardForecastComponent";
 
 const WeatherCard = ({ data, timeOfDay, handleModalOpen, forecastData }) => {
+	if (!data) return null;
+
 	return (
 		<div
 			data-time={timeOfDay}
-			className="relative z-10 w-full sm:w-4/5 max-w-2xl pt-10 p-6 h-fit rounded-none sm:rounded-xl backdrop-blur-md flex flex-col items-center text-center space-y-6"
+			className="relative mt-10 md:mt-15 z-10 w-full sm:w-4/5 max-w-2xl pt-10 p-6 h-fit rounded-none sm:rounded-xl backdrop-blur-sm flex flex-col items-center text-center space-y-6"
 		>
 			{/* location name */}
 			<section onClick={handleModalOpen} className="cursor-pointer">
@@ -77,13 +79,9 @@ const WeatherCard = ({ data, timeOfDay, handleModalOpen, forecastData }) => {
 				</div>
 			</section>
 
-			{/* forecast cards */}
-			<section>
-				<div className="flex justify-around gap-5">
-					{ forecastData.map((hourForecastData, idx) => (
-						<WeatherCardForecastComponent key={idx} forecastData={hourForecastData} data={data} />
-					))}
-				</div>
+			{/* weather forecast */}
+			<section className="w-full overflow-x-auto">
+				<WeatherCardForecastComponent forecastData={forecastData} />
 			</section>
 
 			{/* last updated time */}

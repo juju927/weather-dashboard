@@ -93,6 +93,7 @@
 	--wcc-wind: var(--color-mocha-flamingo);
 	--wcc-rain: var(--color-mocha-blue);
 	--wcc-cloud: var(--color-mocha-sky);
+	--wcf-highlight: var(--color-mocha-yellow);
 }
 
 [data-time="day"] {
@@ -107,6 +108,7 @@
 	--wcc-wind: var(--color-mocha-sapphire);
 	--wcc-rain: var(--color-mocha-blue);
 	--wcc-cloud: var(--color-mocha-sky);
+	--wcf-highlight: var(--color-mocha-yellow);
 }
 
 [data-time="sunset"] {
@@ -121,6 +123,7 @@
 	--wcc-wind: var(--color-mocha-flamingo);
 	--wcc-rain: var(--color-mocha-blue);
 	--wcc-cloud: var(--color-mocha-sky);
+	--wcf-highlight: var(--color-mocha-yellow);
 }
 
 [data-time="sunrise"] {
@@ -135,6 +138,7 @@
 	--wcc-wind: var(--color-mocha-flamingo);
 	--wcc-rain: var(--color-mocha-blue);
 	--wcc-cloud: var(--color-mocha-sky);
+	--wcf-highlight: var(--color-mocha-yellow);
 }
 
 @media (prefers-reduced-motion: reduce) {

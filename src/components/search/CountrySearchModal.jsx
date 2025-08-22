@@ -200,8 +200,8 @@ const CountrySearchModal = ({
 							</div>
 						)}
 					</div>
-					<div className="px-5 py-2 flex flex-col sm:flex-row gap-2 sm:gap-0 justify-between border-t border-[var(--color-mocha-overlay0)]">
-						<span className="italic text-xs text-[var(--color-mocha-subtext0)]">
+					<div className="px-5 py-2 flex flex-col sm:flex-row gap-2 sm:gap-0 justify-end lg:justify-between border-t border-[var(--color-mocha-overlay0)]">
+						<span className="hidden lg:inline-block italic text-xs text-[var(--color-mocha-subtext0)]">
 							Esc to close • ↑↓ to navigate • Enter to select
 						</span>
 						<span className="italic text-right text-xs text-[var(--color-mocha-subtext0)]">

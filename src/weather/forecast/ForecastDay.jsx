@@ -10,7 +10,7 @@ const ForecastDay = ({ forecastDayData, isSelected, handleClick }) => {
 		<div
 			className={`relative m-1 flex flex-col items-center lowercase text-md cursor-pointer ${
 				isSelected
-					? "text-[var(--wc-text)] font-bold"
+					? "text-[var(--wc-text)] font-semibold"
 					: "text-[var(--wc-subtext)] font-light"
 			} shrink-0`}
 			onClick={handleClick}

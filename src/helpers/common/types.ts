@@ -23,11 +23,11 @@ export interface WeatherData {
 	local_sunset_time?: number,
 }
 
-export interface WeatherForecastData {
-	timestamp_dt: number;
-	weather_main: string;
-	weather_icon: string;
-}
+// export interface WeatherForecastData {
+// 	timestamp_dt: number;
+// 	weather_main: string;
+// 	weather_icon: string;
+// }
 
 export interface WeatherForecastData {
 	location: {

@@ -1,8 +1,8 @@
 import { WeatherData, WeatherForecastData } from "../common/types";
 import countryNamesJSON from "../../../data/countryCodesToNames.json";
 import { openWeatherMapApiClient } from "./openWeatherMap/openWeatherMapApi";
-
-import { weatherApiClient, WeatherAPICurrentResponse } from "./weatherApi/weatherApi";
+import { weatherApiClient } from "./weatherApi/weatherApi";
+import { mapWeatherApiResponseToForecastData, mapWeatherApiResponseToWeatherData } from "./weatherApi/helpers";
 import { mapOpenWEatherMapApiResponseToForecastData, mapOpenWeatherMapApiResponseToWeatherData } from "./openWeatherMap/helpers";
 
 
@@ -41,46 +41,17 @@ export const getWeatherData = async (lat: number, lon: number, api: WeatherApis=
     }
 }
 
-export const getForecastData = async (lat: number, lon: number, api: WeatherApis=WeatherApis.OPEN_WEATHER_MAP_API): Promise<WeatherForecastData[]|null> => {
+export const getForecastData = async (lat: number, lon: number): Promise<WeatherForecastData|null> => {
     try {
-        if (api === WeatherApis.OPEN_WEATHER_MAP_API) {
-            const resp = await openWeatherMapApiClient.getForecast(lat, lon);
-            if (resp.status === 200 && resp.data) {
-                return mapOpenWEatherMapApiResponseToForecastData(resp.data);
-            }  
-
+        const resp = await weatherApiClient.getWeatherForecast(`${lat},${lon}`);
+        if (resp.status === 200 && resp.data) {
+            return mapWeatherApiResponseToForecastData(resp.data)
         }
-        console.log("baboo", resp)
         console.log("Somehow failed lol");
         return null;
     } catch (err) {
         console.error(err);
         return null;
-    }
-}
-
-
-// weather mappers
-const mapWeatherApiResponseToWeatherData = (data: WeatherAPICurrentResponse): WeatherData => {
-    return {
-        location_name: data?.location?.name,
-        location_country: data?.location?.country,
-        tz_offset: getTzOffsetFromTzId(data?.location?.tz_id),
-        lat: data?.location?.lat,
-        lon: data?.location?.lon,
-        timestamp_dt: data?.current?.last_updated_epoch,
-
-        weather_main: data?.current?.condition?.text,
-        weather_icon: data?.current?.condition?.icon,
-
-        temp_c: data?.current?.temp_c,
-        feelslike_temp_c: data?.current?.feelslike_c,
-        
-        wind_speed: data?.current?.wind_mph,
-        rain_mm: data?.current?.precip_mm,
-        clouds_percent: data?.current?.cloud,
-
-        visibility: data?.current?.vis_km,
     }
 }
 
@@ -91,7 +62,7 @@ export const getCountryName = (code: string): string => {
     return countryNames[code] ?? code;
 }
 
-const getTzOffsetFromTzId = (tzId: string, date = new Date()): number => {
+export const getTzOffsetFromTzId = (tzId: string, date = new Date()): number => {
   const local = new Date(date.toLocaleString("en-US", { timeZone: tzId }));
   const diffMinutes = (local.getTime() - date.getTime()) / (1000 * 60);
   return -diffMinutes * 60;

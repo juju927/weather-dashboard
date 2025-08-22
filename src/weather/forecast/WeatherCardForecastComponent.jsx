@@ -9,7 +9,7 @@ const WeatherCardForecastComponent = ({ forecastData }) => {
 	return (
 		<>
 			<div className="flex justify-center">
-				{forecastData.forecast.day.map((forecastDayData, idx) => (
+				{forecastData?.forecast?.day?.map((forecastDayData, idx) => (
 					<ForecastDay
 						key={`fc-day-${idx}`}
 						forecastDayData={forecastDayData}
@@ -20,7 +20,7 @@ const WeatherCardForecastComponent = ({ forecastData }) => {
 			</div>
 
 			<div className="mt-2 md:mt-4 pb-4 flex justify-around gap-5 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
-				{forecastData.forecast.day[selectedDayIndex].hour
+				{forecastData?.forecast?.day?.[selectedDayIndex]?.hour
 					.filter((_, idx) => idx % 3 === 0)
 					.map((forecastHourData, idx) => (
 						<ForecastHour
